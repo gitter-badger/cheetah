@@ -17,7 +17,7 @@ func GenerateCsrfToken(maskLen int, token []byte) string {
 	mask := stringutil.GenerateRandomByte(maskLen)
 
 	// XOR
-	tokenByte := xorTokens(token, mask)
+	tokenByte := xorCsrfTokens(token, mask)
 
 	// Base64 encoding.
 	tokenStr := base64.StdEncoding.EncodeToString([]byte(string(mask) + string(tokenByte)))
@@ -50,7 +50,7 @@ func ValidateCsrfToken(maskLen int, token, trueToken []byte) bool {
 	tokenByte = []byte(token)[maskLen:]
 
 	// XOR
-	token = string(xorTokens(mask, tokenByte))
+	token = string(xorCsrfTokens(mask, tokenByte))
 
 	// Return true if the token is equals to trueToken.
 	if 0 == strings.Compare(token, trueToken) {
@@ -62,7 +62,7 @@ func ValidateCsrfToken(maskLen int, token, trueToken []byte) bool {
 }
 
 // XOR
-func xorTokens(token1, token2 []byte) []byte {
+func xorCsrfTokens(token1, token2 []byte) []byte {
 	len1 := len(token1)
 	len2 := len(token2)
 	if len1 > len2 {
