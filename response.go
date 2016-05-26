@@ -66,7 +66,7 @@ func (this *WebResponse) sendHeaders() {
 }
 
 func (this *WebResponse) sendBody() {
-	fmt.Fprintln(this.Writer, this.Body)
+	fmt.Fprint(this.Writer, this.Body)
 	this.Body = ""
 }
 
