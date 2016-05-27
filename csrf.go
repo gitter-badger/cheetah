@@ -4,8 +4,8 @@
 package cheetah
 
 import (
-	"github.com/HeadwindFly/cheetah/utils/string"
 	"encoding/base64"
+	"github.com/HeadwindFly/cheetah/utils/string"
 	"strings"
 )
 
@@ -66,21 +66,21 @@ func xorCsrfTokens(token1, token2 []byte) []byte {
 	len1 := len(token1)
 	len2 := len(token2)
 	if len1 > len2 {
-		for i := 0; i < len1 - len2; i++ {
-			token2 = append(token2, token2[i % len2])
+		for i := 0; i < len1-len2; i++ {
+			token2 = append(token2, token2[i%len2])
 		}
 	} else {
-		for i := 0; i < len2 - len1; i++ {
+		for i := 0; i < len2-len1; i++ {
 			if len1 == 0 {
 				token1 = append(token1, ' ')
 			} else {
-				token1 = append(token1, token1[i % len1])
+				token1 = append(token1, token1[i%len1])
 			}
 		}
 	}
 	token := []byte{}
 	for i := 0; i < len(token1); i++ {
-		token = append(token, token1[i] ^ token2[i])
+		token = append(token, token1[i]^token2[i])
 	}
 	return token
 }

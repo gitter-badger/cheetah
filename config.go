@@ -6,59 +6,59 @@ package cheetah
 // Configuration of application.
 type Config struct {
 	// Server Configuration
-	serverPort                   string
-	serverProtocol               string
-	serverCertFile               string
-	serverKeyFile                string
+	serverPort     string
+	serverProtocol string
+	serverCertFile string
+	serverKeyFile  string
 
 	// Controller Configuration
-	controllerPrefix             string
-	controllerSuffix             string
+	controllerPrefix string
+	controllerSuffix string
 
 	// Action Configuration
-	actionPrefix                 string
-	actionSuffix                 string
-	defaultAction                string
+	actionPrefix  string
+	actionSuffix  string
+	defaultAction string
 
 	// View Configuration
-	viewLayout                   string
-	viewLayoutDir                string
-	viewDir                      string
-	viewSuffix                   string
+	viewLayout    string
+	viewLayoutDir string
+	viewDir       string
+	viewSuffix    string
 
 	// Session Configuration
-	enableSession                bool
-	sessionName                  string
-	sessionStore                 string
-	sessionMaxAge                int
+	enableSession bool
+	sessionName   string
+	sessionStore  string
+	sessionMaxAge int
 
 	// Log Configuration
-	enableLog                    bool
-	logLevel                     int
-	logFlag                      int
+	enableLog bool
+	logLevel  int
+	logFlag   int
 	// FileTartget
-	logFileLevel                 int
-	logFileDir                   string
-	logFileName                  string
-	logFilePath                  string
-	logFileMaxSize               int64
-	logFileInterval              int
+	logFileLevel    int
+	logFileDir      string
+	logFileName     string
+	logFilePath     string
+	logFileMaxSize  int64
+	logFileInterval int
 	// EmailTarget
-	logMailLevel                 int
-	logMailHost                  string
-	logMailPort                  string
-	logMailUser                  string
-	logMailPassword              string
-	logMailFrom                  string
-	logMailTo                    string
-	logMailSubject               string
+	logMailLevel    int
+	logMailHost     string
+	logMailPort     string
+	logMailUser     string
+	logMailPassword string
+	logMailFrom     string
+	logMailTo       string
+	logMailSubject  string
 
 	// CSRF Configuration
-	enableCsrfValidation         bool
-	csrfMaskLength               int
-	csrfSessionParam             string
-	csrfHeaderParam              string
-	csrfFormParam                string
+	enableCsrfValidation bool
+	csrfMaskLength       int
+	csrfSessionParam     string
+	csrfHeaderParam      string
+	csrfFormParam        string
 
 	// Router Configuration
 	defaultRoute                 string
@@ -68,13 +68,13 @@ type Config struct {
 	routerHandleOPTIONS          bool
 
 	// Redis Configuration
-	enableCache                  bool
-	redisNetwork                 string
-	redisAddress                 string
-	redisPassword                string
-	redisDb                      string
-	redisMaxIdle                 int
-	redisIdleTimeout             int
+	enableCache      bool
+	redisNetwork     string
+	redisAddress     string
+	redisPassword    string
+	redisDb          string
+	redisMaxIdle     int
+	redisIdleTimeout int
 }
 
 func (this *Config) ServerPort() string {

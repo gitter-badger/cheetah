@@ -5,11 +5,11 @@ package cheetah
 
 import (
 	"fmt"
+	"github.com/hoisie/mustache"
 	"net/http"
 	"runtime"
 	"runtime/debug"
 	"strings"
-	"github.com/hoisie/mustache"
 )
 
 type NotFoundHandler struct {
@@ -42,7 +42,7 @@ func defaultErrorHandler(w http.ResponseWriter, r *http.Request, status int, v i
 		if _, file, line, ok := runtime.Caller(callDepth); ok {
 			body += fmt.Sprintf(`<hr><div class="info">%s: %d</div><br><div class="info">%s</div>`, file, line, v)
 		}
-		body += `<br><hr><h2>STACK INFO:</h2><hr><div class="stack">`;
+		body += `<br><hr><h2>STACK INFO:</h2><hr><div class="stack">`
 		stack := string(debug.Stack())
 		stack = strings.Replace(stack, "\n", `<hr>`, -1)
 		stack = strings.Replace(stack, "\t", `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`, -1)
@@ -77,6 +77,6 @@ func defaultErrorHandler(w http.ResponseWriter, r *http.Request, status int, v i
 {{{body}}}
 </body>
 </html>
-	`, map[string]string{"title":title, "body":body})
+	`, map[string]string{"title": title, "body": body})
 	fmt.Fprint(w, html)
 }

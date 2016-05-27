@@ -37,7 +37,7 @@ func (this *Context) ValidateCsrfToken() bool {
 	}
 
 	if ValidateCsrfToken(App.Config.csrfMaskLength, this.getCsrfTokenFromForm(), this.trueCsrfToken) ||
-	ValidateCsrfToken(App.Config.csrfMaskLength, this.getCsrfTokenFromHeader(), this.trueCsrfToken) {
+		ValidateCsrfToken(App.Config.csrfMaskLength, this.getCsrfTokenFromHeader(), this.trueCsrfToken) {
 		return true
 	}
 	return false

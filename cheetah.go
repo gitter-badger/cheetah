@@ -5,12 +5,12 @@ package cheetah
 
 import (
 	"github.com/HeadwindFly/cheetah/utils/string"
+	"github.com/go-language/session"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"reflect"
 	"strconv"
 	"strings"
-	"github.com/go-language/session"
 )
 
 var (
@@ -107,7 +107,7 @@ func getControllerName(name string) (string, bool) {
 		}
 
 		prefixLen := len(App.Config.controllerPrefix)
-		name = stringutil.SubString(name, prefixLen, len(name) - prefixLen)
+		name = stringutil.SubString(name, prefixLen, len(name)-prefixLen)
 	}
 	// remove suffix
 	if len(App.Config.controllerSuffix) > 0 {
@@ -137,7 +137,7 @@ func getActionName(name string) (string, bool) {
 		}
 
 		prefixLen := len(App.Config.actionPrefix)
-		name = stringutil.SubString(name, prefixLen, len(name) - prefixLen)
+		name = stringutil.SubString(name, prefixLen, len(name)-prefixLen)
 	}
 	// remove suffix
 	if len(App.Config.actionSuffix) > 0 {

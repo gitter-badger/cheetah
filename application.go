@@ -5,14 +5,14 @@ package cheetah
 
 import (
 	"fmt"
-	"github.com/go-language/rediscache"
-	log "github.com/go-language/logger"
 	"github.com/HeadwindFly/cheetah/utils/ini"
+	log "github.com/go-language/logger"
+	"github.com/go-language/rediscache"
+	"github.com/go-language/session"
 	"net/http"
+	"net/smtp"
 	"path"
 	"strings"
-	"github.com/go-language/session"
-	"net/smtp"
 )
 
 const (
@@ -27,32 +27,32 @@ const (
 )
 
 const (
-	ServerPort = "8080"
+	ServerPort     = "8080"
 	ServerProtocol = "HTTP"
 
 	ControllerPrefix = ""
 	ControllerSuffix = "Controller"
 
-	ActionPrefix = "Action"
-	ActionSuffix = ""
+	ActionPrefix  = "Action"
+	ActionSuffix  = ""
 	DefaultAction = "Index"
 
-	ViewDir = "views"
-	ViewSuffix = ".html"
-	ViewLayout = "layout.html"
+	ViewDir       = "views"
+	ViewSuffix    = ".html"
+	ViewLayout    = "layout.html"
 	ViewLayoutDir = "layouts"
 
 	EnableSession = true
-	SessionName = "GOSESSION"
+	SessionName   = "GOSESSION"
 
-	LogDir = "logs"
+	LogDir  = "logs"
 	LogName = "app.log"
 
 	EnableCsrfValidation = true
-	CsrfMaskLength = 8
-	CsrfSessionParam = "_csrf"
-	CsrfHeaderParam = "X-CSRF-Token"
-	CsrfFormParam = "_csrf"
+	CsrfMaskLength       = 8
+	CsrfSessionParam     = "_csrf"
+	CsrfHeaderParam      = "X-CSRF-Token"
+	CsrfFormParam        = "_csrf"
 
 	DefaultRoute = "/index"
 )
@@ -76,66 +76,66 @@ type Application struct {
 
 func NewApplication() Application {
 	return Application{
-		state:    StateUninitialized,
-		name:     "Cheetah Application",
-		basePath: "",
-		mode:     ModePro,
-		language:"en",
-		hosts:make(Hosts),
-		defaultHost:nil,
+		state:       StateUninitialized,
+		name:        "Cheetah Application",
+		basePath:    "",
+		mode:        ModePro,
+		language:    "en",
+		hosts:       make(Hosts),
+		defaultHost: nil,
 		Config: &Config{
 			// Server configuration
-			serverPort:                         ServerPort,
-			serverProtocol:                     ServerProtocol,
-			serverCertFile:                     "",
-			serverKeyFile:                      "",
+			serverPort:     ServerPort,
+			serverProtocol: ServerProtocol,
+			serverCertFile: "",
+			serverKeyFile:  "",
 
 			// Controller configuration
-			controllerPrefix:             ControllerPrefix,
-			controllerSuffix:             ControllerSuffix,
+			controllerPrefix: ControllerPrefix,
+			controllerSuffix: ControllerSuffix,
 
 			// Action configuration
-			actionPrefix:                 ActionPrefix,
-			actionSuffix:                 ActionSuffix,
-			defaultAction:                DefaultAction,
+			actionPrefix:  ActionPrefix,
+			actionSuffix:  ActionSuffix,
+			defaultAction: DefaultAction,
 
 			// View configuration
-			viewLayout:                   ViewLayout,
-			viewLayoutDir:ViewLayoutDir,
-			viewDir:                      ViewDir,
-			viewSuffix:                   ViewSuffix,
+			viewLayout:    ViewLayout,
+			viewLayoutDir: ViewLayoutDir,
+			viewDir:       ViewDir,
+			viewSuffix:    ViewSuffix,
 
 			// Session configuration
-			enableSession:                EnableSession,
-			sessionName:                   SessionName,
-			sessionStore:                 "REDIS",
-			sessionMaxAge:                10 * 24 * 3600,
+			enableSession: EnableSession,
+			sessionName:   SessionName,
+			sessionStore:  "REDIS",
+			sessionMaxAge: 10 * 24 * 3600,
 
 			// CSRF configuration
-			enableCsrfValidation:         EnableCsrfValidation,
-			csrfMaskLength:               CsrfMaskLength,
-			csrfSessionParam:             CsrfSessionParam,
-			csrfHeaderParam:              CsrfHeaderParam,
-			csrfFormParam:                CsrfFormParam,
+			enableCsrfValidation: EnableCsrfValidation,
+			csrfMaskLength:       CsrfMaskLength,
+			csrfSessionParam:     CsrfSessionParam,
+			csrfHeaderParam:      CsrfHeaderParam,
+			csrfFormParam:        CsrfFormParam,
 
 			// Log configuration
-			enableLog:                    true,
-			logFlag:                      log.Ldate | log.Ltime | log.Lmicroseconds | log.Llongfile,
-			logLevel:                     log.LevelDebug | log.LevelInfo | log.LevelWarn | log.LevelError | log.LevelFatal,
-			logFileLevel:log.LevelInfo | log.LevelWarn | log.LevelError | log.LevelFatal,
-			logFileDir:                       LogDir,
-			logFilePath:                      "",
-			logFileName:                      LogName,
-			logFileMaxSize:                   int64(20 * 1024 * 1024),
-			logFileInterval:                  3600,
-			logMailLevel:log.LevelError | log.LevelFatal,
-			logMailHost:"",
-			logMailPort:"",
-			logMailUser:"",
-			logMailPassword:"",
-			logMailFrom:"",
-			logMailTo:"",
-			logMailSubject:"Application Log",
+			enableLog:       true,
+			logFlag:         log.Ldate | log.Ltime | log.Lmicroseconds | log.Llongfile,
+			logLevel:        log.LevelDebug | log.LevelInfo | log.LevelWarn | log.LevelError | log.LevelFatal,
+			logFileLevel:    log.LevelInfo | log.LevelWarn | log.LevelError | log.LevelFatal,
+			logFileDir:      LogDir,
+			logFilePath:     "",
+			logFileName:     LogName,
+			logFileMaxSize:  int64(20 * 1024 * 1024),
+			logFileInterval: 3600,
+			logMailLevel:    log.LevelError | log.LevelFatal,
+			logMailHost:     "",
+			logMailPort:     "",
+			logMailUser:     "",
+			logMailPassword: "",
+			logMailFrom:     "",
+			logMailTo:       "",
+			logMailSubject:  "Application Log",
 
 			// Route configuration
 			defaultRoute:                 DefaultRoute,
@@ -145,13 +145,13 @@ func NewApplication() Application {
 			routerHandleOPTIONS:          true,
 
 			// Cache configuration
-			enableCache:true,
-			redisNetwork:                 "tcp",
-			redisAddress:                 ":6379",
-			redisPassword:                "",
-			redisDb:                      "0",
-			redisMaxIdle:                 1000,
-			redisIdleTimeout:             300,
+			enableCache:      true,
+			redisNetwork:     "tcp",
+			redisAddress:     ":6379",
+			redisPassword:    "",
+			redisDb:          "0",
+			redisMaxIdle:     1000,
+			redisIdleTimeout: 300,
 		},
 		errorHandler: defaultErrorHandler,
 		sessionStore: nil,
@@ -475,14 +475,14 @@ func (this *Application) validateConfig() {
 
 func (this *Application) newHost(host string) *Host {
 	this.hosts[host] = &Host{
-		router:NewRouter(
+		router: NewRouter(
 			App.Config.routerRedirectTrailingSlash,
 			App.Config.routerRedirectFixedPath,
 			App.Config.routerHandleMethodNotAllowed,
 			App.Config.routerHandleOPTIONS,
 		),
-		routes:make(Routes, 0),
-	};
+		routes: make(Routes, 0),
+	}
 	return this.hosts[host]
 }
 
@@ -522,7 +522,7 @@ func (this *Application) run() {
 
 			mailTarget := log.NewMailTarget(
 				this.Config.logMailLevel,
-				this.Config.logMailHost + ":" + this.Config.logMailPort,
+				this.Config.logMailHost+":"+this.Config.logMailPort,
 				this.Config.logMailFrom,
 				this.Config.logMailTo,
 				auth,

@@ -12,12 +12,12 @@ type View struct {
 
 func NewView(title, keywords, description string) *View {
 	return &View{
-		Title       :title,
-		Keywords    :keywords,
-		Description :description,
-		HeaderCss :make([]*CssAsset, 0),
-		HeaderJs    :make([]*JsAsset, 0),
-		FooterCss   :make([]*CssAsset, 0),
-		FooterJs    :make([]*JsAsset, 0),
+		Title:       title,
+		Keywords:    keywords,
+		Description: description,
+		HeaderCss:   make([]*CssAsset, 0),
+		HeaderJs:    make([]*JsAsset, 0),
+		FooterCss:   make([]*CssAsset, 0),
+		FooterJs:    make([]*JsAsset, 0),
 	}
 }

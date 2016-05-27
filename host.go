@@ -1,13 +1,13 @@
 package cheetah
 
 import (
-	"reflect"
-	"path"
-	"os"
-	"strings"
-	"github.com/julienschmidt/httprouter"
 	"fmt"
+	"github.com/julienschmidt/httprouter"
 	"net/http"
+	"os"
+	"path"
+	"reflect"
+	"strings"
 )
 
 type Host struct {
@@ -125,7 +125,7 @@ func (this *Host) RegisterWebController(baseRoute string, controller ControllerI
 				}
 				params = append(params, paramKind)
 
-				routeWithParams += "/:" + string(rune(97 + k))
+				routeWithParams += "/:" + string(rune(97+k))
 
 				_routes = append(_routes, routeWithParams) // add route
 			}
@@ -137,6 +137,7 @@ func (this *Host) RegisterWebController(baseRoute string, controller ControllerI
 				AllowMethods:   allowMethods,
 				ControllerType: v.Elem().Type(),
 				ControllerInfo: &ControllerInfo{
+					Route:          _routes[i],
 					PkgPath:        pkgPath,
 					FullName:       t.Elem().Name(),
 					Name:           controllerName,
@@ -171,7 +172,7 @@ func (this *Host) generateRouteHandle() {
 }
 
 func (this *Host) RegisterResources(route, path string) {
-	this.router.ServeFiles("/" + route + "/*filepath", http.Dir(path))
+	this.router.ServeFiles("/"+route+"/*filepath", http.Dir(path))
 }
 
 type Hosts map[string]*Host

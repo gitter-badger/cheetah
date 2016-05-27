@@ -7,12 +7,12 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	log "github.com/go-language/logger"
 	"github.com/HeadwindFly/cheetah/utils/string"
+	log "github.com/go-language/logger"
+	"github.com/go-language/session"
 	"github.com/hoisie/mustache"
 	"net/http"
 	"path"
-	"github.com/go-language/session"
 )
 
 // Controller Interface.
@@ -25,6 +25,7 @@ type ControllerInterface interface {
 
 // Controller Config.
 type ControllerInfo struct {
+	Route          string   // route.
 	PkgPath        string   // package path of the controller.
 	Name           string   // controller's name.
 	FullName       string   // controller's full name.
@@ -33,7 +34,7 @@ type ControllerInfo struct {
 	ActionName     string   // action name.
 	Params         []string // params of action,such as {"string","int"} means that the first param type of string,the second param type of int.
 	Layout         string   // layout's name.
-	Log            *log.Log // log
+	Log            *log.Log // log.
 }
 
 type WebController struct {

@@ -21,24 +21,24 @@ type CssAsset struct {
 
 func NewCssAsset(href string) *CssAsset {
 	return &CssAsset{
-		Href:href,
-		Rel:"stylesheet",
-		Type:"text/css",
-		condition:"",
-		Options:make(map[string]string, 0),
+		Href:      href,
+		Rel:       "stylesheet",
+		Type:      "text/css",
+		condition: "",
+		Options:   make(map[string]string, 0),
 	}
 }
 
 func (this *CssAsset) Output() string {
 	args := make([]interface{}, 0)
-	format := "<link rel=\"%s\" type=\"%s\" href=\"%s\"/>";
+	format := "<link rel=\"%s\" type=\"%s\" href=\"%s\"/>"
 	args = append(args, this.Rel, this.Type, this.Href)
 
-	options := make([]string, 0);
+	options := make([]string, 0)
 	if len(this.Options) > 0 {
-		format = "<link rel=\"%s\" type=\"%s\" href=\"%s\" %s/>";
+		format = "<link rel=\"%s\" type=\"%s\" href=\"%s\" %s/>"
 		for k, v := range this.Options {
-			options = append(options, k + "=\"" + v + "\"")
+			options = append(options, k+"=\""+v+"\"")
 		}
 		args = append(args, strings.Join(options, " "))
 	}
@@ -71,18 +71,17 @@ type JsAsset struct {
 
 func NewJsAsset(src, script string) *JsAsset {
 	return &JsAsset{
-		Src:src,
-		Script:script,
-		Type:"text/javascript",
-		condition:"",
-		Options:make(map[string]string, 0),
+		Src:       src,
+		Script:    script,
+		Type:      "text/javascript",
+		condition: "",
+		Options:   make(map[string]string, 0),
 	}
 }
 
 func (this *JsAsset) Output() string {
 	args := make([]interface{}, 0)
-	format := "";
-
+	format := ""
 
 	if len(this.Src) > 0 {
 		args = append(args, this.Type, this.Src)
@@ -100,11 +99,11 @@ func (this *JsAsset) Output() string {
 		}
 	}
 
-	options := make([]string, 0);
+	options := make([]string, 0)
 	if len(this.Options) > 0 {
-		format = "<link rel=\"%s\" type=\"%s\" href=\"%s\" %s/>";
+		format = "<link rel=\"%s\" type=\"%s\" href=\"%s\" %s/>"
 		for k, v := range this.Options {
-			options = append(options, k + "=\"" + v + "\"")
+			options = append(options, k+"=\""+v+"\"")
 		}
 		args = append(args, strings.Join(options, " "))
 	}

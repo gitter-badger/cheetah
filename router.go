@@ -46,7 +46,7 @@ func BuildPrettyRoute(route string) string {
 	for i := 1; i < len(route); i++ {
 		c := route[i]
 		if ('A' <= c) && (c <= 'Z') {
-			prettyRoute += "-" + string(rune(int(c) + 32))
+			prettyRoute += "-" + string(rune(int(c)+32))
 		} else {
 			prettyRoute += string(c)
 		}
