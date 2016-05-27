@@ -8,7 +8,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	log "github.com/go-language/logger"
-	"github.com/go-language/utils/string"
+	"github.com/HeadwindFly/cheetah/utils/string"
 	"github.com/hoisie/mustache"
 	"net/http"
 	"path"

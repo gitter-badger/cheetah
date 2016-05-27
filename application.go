@@ -7,8 +7,7 @@ import (
 	"fmt"
 	"github.com/go-language/rediscache"
 	log "github.com/go-language/logger"
-	"github.com/go-language/utils/file"
-	"github.com/go-language/utils/ini"
+	"github.com/HeadwindFly/cheetah/utils/ini"
 	"net/http"
 	"path"
 	"strings"
@@ -433,14 +432,6 @@ func (this *Application) validateConfig() {
 
 	// Check server configuration
 	if strings.EqualFold("HTTPS", this.Config.serverProtocol) {
-		isCertFileExist, _ := fileutil.IsFile(this.Config.serverCertFile)
-		if !isCertFileExist {
-			panic("The server's cert file dose not exist: " + this.Config.serverCertFile)
-		}
-		isKeyFileExist, _ := fileutil.IsFile(this.Config.serverKeyFile)
-		if !isKeyFileExist {
-			panic("The server's key file dose not exist: " + this.Config.serverKeyFile)
-		}
 	}
 
 	// Check action configuration

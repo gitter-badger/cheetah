@@ -4,7 +4,7 @@
 package cheetah
 
 import (
-	"github.com/go-language/utils/string"
+	"github.com/HeadwindFly/cheetah/utils/string"
 	"encoding/base64"
 	"strings"
 )
