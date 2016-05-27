@@ -15,6 +15,18 @@ type Host struct {
 	routes Routes
 }
 
+func (this *Host) SetNotFoundHandler(handler http.Handler) {
+	this.router.NotFound = handler
+}
+
+func (this *Host) SetMethodNotAllowedHandler(handler http.Handler) {
+	this.router.MethodNotAllowed = handler
+}
+
+func (this *Host) SetPanicHandler(handler func(http.ResponseWriter, *http.Request, interface{})) {
+	this.router.PanicHandler = handler
+}
+
 func (this *Host) RegisterWebController(baseRoute string, controller ControllerInterface) {
 	if (len(baseRoute) == 0) || (baseRoute[0] != '/') {
 		panic("The first character of route named \"" + baseRoute + "\" must be \"/\".")
@@ -164,12 +176,9 @@ func (this *Host) RegisterResources(route, path string) {
 
 type Hosts map[string]*Host
 
-// Implement the ServerHTTP method on our new type
 func (this Hosts) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// Check if a http.Handler is registered for the given host.
-	// If yes, use it to handle the request.
+	// Get domain from host.
 	host := strings.Split(r.Host, ":")
-	fmt.Printf("%s\n", host)
 	if host, ok := this[host[0]]; ok {
 		host.router.ServeHTTP(w, r)
 	} else {
