@@ -232,9 +232,9 @@ func (this *WebController) getViewFile(name string) string {
 }
 
 // Get layout name
-// If it is set as empty string means that disabled the layout.
-// Returns zero string '0' default, means that use the global layout.
-// Layout enable default.
+// If it is set as "FALSE" means that disabled the layout.
+// Returns empty string default, means that use the global layout of configuration.
+// Layout enable default and use the configuration's layout.
 func (this *WebController) GetLayout() string {
-	return "0"
+	return ""
 }

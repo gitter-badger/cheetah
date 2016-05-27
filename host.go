@@ -71,15 +71,21 @@ func (this *Host) RegisterWebController(baseRoute string, controller ControllerI
 	if layoutMethod.IsValid() {
 		values := layoutMethod.Call([]reflect.Value{})
 		for _, value := range values {
-			if _value, ok := value.Interface().(string); ok && !strings.EqualFold(_value, "0") {
+			if _value, ok := value.Interface().(string); ok {
 				viewLayout = _value
 			}
 			break
 		}
 	}
 
-	if 0 == strings.Compare("0", viewLayout) {
-		viewLayout = App.Config.viewLayout
+	// See also the method named GetLayout() of WebController.
+	switch strings.Compare("FALSE", viewLayout) {
+	case 0:
+		viewLayout = ""
+	default:
+		if len(viewLayout) == 0 {
+			viewLayout = App.Config.viewLayout
+		}
 	}
 
 	for j := 0; j < t.NumMethod(); j++ {
@@ -125,7 +131,7 @@ func (this *Host) RegisterWebController(baseRoute string, controller ControllerI
 				}
 				params = append(params, paramKind)
 
-				routeWithParams += "/:" + string(rune(97+k))
+				routeWithParams += "/:" + string(rune(97 + k))
 
 				_routes = append(_routes, routeWithParams) // add route
 			}
@@ -172,7 +178,7 @@ func (this *Host) generateRouteHandle() {
 }
 
 func (this *Host) RegisterResources(route, path string) {
-	this.router.ServeFiles("/"+route+"/*filepath", http.Dir(path))
+	this.router.ServeFiles("/" + route + "/*filepath", http.Dir(path))
 }
 
 type Hosts map[string]*Host
