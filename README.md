@@ -2,7 +2,7 @@
 **Cheetah** is a **simple** web framework for **Go**.
  This project aims to become a powerful web development tool and **make developer easily to build a high-performance, secure and stronger web application**.
 
-## Cheetah's 1.0.0 is released.
+## Cheetah's 1.0.0a is released.
 
 
 # Feature
