@@ -34,7 +34,6 @@ type RouteInfo struct {
 	AllowMethods   []string           // allowed methods.
 	ControllerType reflect.Type       // controller's reflect.Type.
 	ControllerInfo *ControllerInfo    // controller's info
-					  // ActionInfo       *ActionInfo        // action's info
 	Handle         *httprouter.Handle // route handle.
 }
 

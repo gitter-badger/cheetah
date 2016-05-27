@@ -12,7 +12,6 @@ import (
 	"net/http"
 	"path"
 	"strings"
-	"github.com/julienschmidt/httprouter"
 	"github.com/go-language/session"
 	"net/smtp"
 )
@@ -29,6 +28,7 @@ const (
 )
 
 const (
+	ServerPort = "8080"
 	ServerAddr = ":8080"
 	ServerProtocol = "HTTP"
 
@@ -65,9 +65,10 @@ type Application struct {
 	basePath     string
 	state        int
 	language     string
+	port         string
+	hosts        Hosts
+	defaultHost  *Host
 	Config       *Config
-	routes       Routes
-	router       *Router
 	errorHandler ErrorHandler
 	sessionStore session.Store
 	Logger       *log.Logger
@@ -81,7 +82,10 @@ func NewApplication() Application {
 		name:     "Cheetah Application",
 		basePath: "",
 		mode:     ModePro,
+		port: ServerPort,
 		language:"en",
+		hosts:make(Hosts),
+		defaultHost:nil,
 		Config: &Config{
 			// Server configuration
 			serverAddr:                         ServerAddr,
@@ -152,7 +156,6 @@ func NewApplication() Application {
 			redisMaxIdle:                 1000,
 			redisIdleTimeout:             300,
 		},
-		routes:       make(Routes, 0),
 		errorHandler: defaultErrorHandler,
 		sessionStore: nil,
 		Logger:       nil,
@@ -410,12 +413,6 @@ func (this *Application) loadConfig(filename string) {
 	if err == nil {
 		this.Config.routerHandleOPTIONS = routerHandleOPTIONS
 	}
-	this.router = NewRouter(
-		this.Config.routerRedirectTrailingSlash,
-		this.Config.routerRedirectFixedPath,
-		this.Config.routerHandleMethodNotAllowed,
-		this.Config.routerHandleOPTIONS,
-	)
 
 	// Set resources configuration
 	resourcesSection, err := config.GetSection("resources")
@@ -487,19 +484,27 @@ func (this *Application) validateConfig() {
 	}
 }
 
+func (this *Application) newHost(host string) *Host {
+	this.hosts[host] = &Host{
+		router:NewRouter(
+			App.Config.routerRedirectTrailingSlash,
+			App.Config.routerRedirectFixedPath,
+			App.Config.routerHandleMethodNotAllowed,
+			App.Config.routerHandleOPTIONS,
+		),
+		routes:make(Routes, 0),
+	};
+	return this.hosts[host]
+}
+
 func (this *Application) run() {
 	this.registerRouteHandler()
-
-	this.registerDefaultRoute()
 
 	var err error
 
 	if this.state == StateUninitialized {
 		panic("Please initialize the Application by invoking the method: " + "cheetah.Init(\"/path/to/ini_config_file\")")
 	}
-
-	// Register resources
-	this.RegisterResources()
 
 	// Register logger
 	if this.Config.enableLog {
@@ -576,16 +581,33 @@ func (this *Application) run() {
 
 	fmt.Println("Application started.")
 
+	if len(this.hosts) == 0 {
+		panic("No host.")
+	}
+
+	var handler http.Handler
+	if len(this.hosts) == 1 {
+		for _, host := range this.hosts {
+			handler = host.router
+		}
+
+	} else {
+		handler = this.hosts
+		if this.defaultHost == nil {
+			panic("The default host must be set.")
+		}
+	}
+
 	// If the protocol equal HTTPS
 	if strings.EqualFold("HTTPS", this.Config.serverProtocol) {
 		err = http.ListenAndServeTLS(
 			this.Config.serverAddr,
 			this.Config.serverCertFile,
 			this.Config.serverKeyFile,
-			this.router,
+			handler,
 		)
 	} else {
-		err = http.ListenAndServe(this.Config.serverAddr, this.router)
+		err = http.ListenAndServe(":" + this.port, handler)
 	}
 
 	if err != nil {
@@ -595,37 +617,8 @@ func (this *Application) run() {
 
 // Register route handler.
 func (this *Application) registerRouteHandler() {
-	for key, route := range this.routes {
-		handle := generateRouteHandle(route.Route, route.ControllerType, route.ControllerInfo)
-		for i := 0; i < len(route.AllowMethods); i++ {
-			this.router.Handle(route.AllowMethods[i], route.Route, handle)
-		}
-		this.routes[key].Handle = &handle
-	}
-}
-
-// Register default route.
-func (this *Application) registerDefaultRoute() {
-	if route, ok := this.routes[this.Config.defaultRoute]; ok {
-		this.router.Handle("GET", "/", *route.Handle)
-	} else {
-		this.router.Handle("GET", "/", func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
-			fmt.Fprint(w, "Hello Cheetah.")
-		})
-	}
-}
-
-func (this *Application) RegisterResources() {
-	for route, resourcesPath := range this.resources {
-		isDir, _ := fileutil.IsDir(resourcesPath)
-		if !isDir {
-			resourcesPath = path.Join(this.basePath, resourcesPath)
-			isDir, _ = fileutil.IsDir(resourcesPath)
-			if !isDir {
-				fmt.Printf("The resources's direction does not exist: ", resourcesPath)
-			}
-		}
-		this.router.ServeFiles("/" + route + "/*filepath", http.Dir(resourcesPath))
+	for _, host := range this.hosts {
+		host.generateRouteHandle()
 	}
 }
 
@@ -647,4 +640,8 @@ func (this *Application) State() int {
 
 func (this *Application) SetSessionStore(store session.Store) {
 	this.sessionStore = store
+}
+
+func (this *Application) SetDefaultHost(host *Host) {
+	this.defaultHost = host
 }
