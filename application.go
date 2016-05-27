@@ -71,7 +71,6 @@ type Application struct {
 	sessionStore session.Store
 	Logger       *log.Logger
 	Cache        *rediscache.RedisCache
-	resources    map[string]string
 }
 
 func NewApplication() Application {
@@ -156,7 +155,6 @@ func NewApplication() Application {
 		errorHandler: defaultErrorHandler,
 		sessionStore: nil,
 		Logger:       nil,
-		resources:    make(map[string]string, 0),
 	}
 }
 
@@ -409,12 +407,6 @@ func (this *Application) loadConfig(filename string) {
 	routerHandleOPTIONS, err := section.GetBool("router.handle_options")
 	if err == nil {
 		this.Config.routerHandleOPTIONS = routerHandleOPTIONS
-	}
-
-	// Set resources configuration
-	resourcesSection, err := config.GetSection("resources")
-	if err == nil {
-		this.resources = resourcesSection.Params
 	}
 
 	// validate configuration
