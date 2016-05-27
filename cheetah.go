@@ -157,9 +157,25 @@ func SetErrorHandler(handler ErrorHandler) {
 }
 
 func SetSessionStore(store session.Store) {
-	App.SetSessionStore(store)
+	App.sessionStore = store
 }
 
 func SetDefaultHost(host *Host) {
-	App.SetDefaultHost(host)
+	App.defaultHost = host
+}
+
+func Name() string {
+	return App.name
+}
+
+func Mode() int {
+	return App.mode
+}
+
+func BasePath() string {
+	return App.basePath
+}
+
+func State() int {
+	return App.state
 }

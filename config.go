@@ -6,7 +6,7 @@ package cheetah
 // Configuration of application.
 type Config struct {
 	// Server Configuration
-	serverAddr                   string
+	serverPort                   string
 	serverProtocol               string
 	serverCertFile               string
 	serverKeyFile                string
@@ -77,8 +77,8 @@ type Config struct {
 	redisIdleTimeout             int
 }
 
-func (this *Config) ServerAddr() string {
-	return this.serverAddr
+func (this *Config) ServerPort() string {
+	return this.serverPort
 }
 
 func (this *Config) ServerProtocol() string {

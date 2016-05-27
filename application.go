@@ -29,7 +29,6 @@ const (
 
 const (
 	ServerPort = "8080"
-	ServerAddr = ":8080"
 	ServerProtocol = "HTTP"
 
 	ControllerPrefix = ""
@@ -82,13 +81,12 @@ func NewApplication() Application {
 		name:     "Cheetah Application",
 		basePath: "",
 		mode:     ModePro,
-		port: ServerPort,
 		language:"en",
 		hosts:make(Hosts),
 		defaultHost:nil,
 		Config: &Config{
 			// Server configuration
-			serverAddr:                         ServerAddr,
+			serverPort:                         ServerPort,
 			serverProtocol:                     ServerProtocol,
 			serverCertFile:                     "",
 			serverKeyFile:                      "",
@@ -194,9 +192,9 @@ func (this *Application) loadConfig(filename string) {
 	}
 
 	// Set server configuration
-	addr, err := section.GetString("server.addr")
+	port, err := section.GetString("server.port")
 	if err == nil {
-		this.Config.serverAddr = addr
+		this.Config.serverPort = port
 	}
 	protocol, err := section.GetString("server.protocol")
 	if err == nil {
@@ -598,16 +596,17 @@ func (this *Application) run() {
 		}
 	}
 
+	addr := ":" + this.Config.serverPort
 	// If the protocol equal HTTPS
 	if strings.EqualFold("HTTPS", this.Config.serverProtocol) {
 		err = http.ListenAndServeTLS(
-			this.Config.serverAddr,
+			addr,
 			this.Config.serverCertFile,
 			this.Config.serverKeyFile,
 			handler,
 		)
 	} else {
-		err = http.ListenAndServe(":" + this.port, handler)
+		err = http.ListenAndServe(addr, handler)
 	}
 
 	if err != nil {
@@ -620,28 +619,4 @@ func (this *Application) registerRouteHandler() {
 	for _, host := range this.hosts {
 		host.generateRouteHandle()
 	}
-}
-
-func (this *Application) Name() string {
-	return this.name
-}
-
-func (this *Application) Mode() int {
-	return this.mode
-}
-
-func (this *Application) BasePath() string {
-	return this.basePath
-}
-
-func (this *Application) State() int {
-	return this.state
-}
-
-func (this *Application) SetSessionStore(store session.Store) {
-	this.sessionStore = store
-}
-
-func (this *Application) SetDefaultHost(host *Host) {
-	this.defaultHost = host
 }
