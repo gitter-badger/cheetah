@@ -1,4 +1,6 @@
 # Cheetah
+
+[![Join the chat at https://gitter.im/HeadwindFly/cheetah](https://badges.gitter.im/HeadwindFly/cheetah.svg)](https://gitter.im/HeadwindFly/cheetah?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 **Cheetah** is a **simple** web framework for **Go**.
  This project aims to become a powerful web development tool and **make developer easily to build a high-performance, secure and stronger web application**.
 
